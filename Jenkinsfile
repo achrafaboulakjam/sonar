@@ -20,7 +20,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQubeDockerDemo') {
-                    bat '''
+                    sh '''
                         mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=SonarQubeDockerDemo \
                         -Dsonar.host.url=http://13.37.216.213:9001 \
