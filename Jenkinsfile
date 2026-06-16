@@ -13,7 +13,7 @@ pipeline {
                     extensions: [],
                     userRemoteConfigs: [[url: 'https://github.com/achrafaboulakjam/sonar']]
                 )
-                echo 'Git Checkout Completed !'
+                echo 'Git Checkout Completed'
             }
         }
 
