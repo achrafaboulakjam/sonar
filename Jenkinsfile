@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     tools {
         maven 'Maven'
     }
@@ -7,31 +8,27 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ZudaPradana/sonar']])
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[url: 'https://github.com/achrafaboulakjam/sonar']]
+                )
                 echo 'Git Checkout Completed'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sq1') {
-                    bat '''mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-analysis -Dsonar.projectName='sonar-analysis' -Dsonar.host.url=http://localhost:9000''' //port 9000 is default for sonar
+                withSonarQubeEnv('ServerNameSonar') {
+                    bat '''
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=SonarQubeDockerDemo \
+                        -Dsonar.host.url=http://13.37.216.213:9001 \
+                        -Dsonar.login=sqp_75d4c7e1fdf7afb76d83dddd187e0c76c4d1d2da
+                    '''
+                    // port 9000 is default for SonarQube
                     echo 'SonarQube Analysis Completed'
                 }
-            }
-        }
-    }
-    post {
-        success {
-            script {
-                // Trigger another pipeline upon success
-                build job: 'telegram-notification'
-            }
-        }
-        failure {
-            script {
-                // Trigger another pipeline upon failure
-                build job: 'telegram-notification'
             }
         }
     }
